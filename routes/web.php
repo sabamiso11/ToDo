@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect('/create', '/', 301);
+
+Route::get('/', 'TaskListController@index');
+Route::post('create', 'TaskListController@store');
+Route::get('/list/{id}', 'TaskListController@show');
