@@ -24,10 +24,16 @@
       </div>
     @endif
 
+    @if ($errors->has('list_name'))
+    <div class="bg-info">
+    <p class="error">{{ $errors->first('list_name') }}</p>
+    </div>
+    @endif
+
     @foreach ($lists as $list)
       <div>
         <ul>
-          <li><a href="{{ url('/list', $list->id) }}">{{ $list->list_name }}</a></li>
+          <li><a href="{{ url('/lists', $list) }}">{{ $list->list_name }}</a></li>
         </ul>
 
       </div>

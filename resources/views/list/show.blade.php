@@ -9,9 +9,37 @@
     <h1>{{ $list->list_name }}</h1>
 
     <h2>タスク一覧</h2>
+    <form method="post" action="{{ action('TaskController@store', $list) }}" >
+      {{ csrf_field() }}
+      <div class="form-group">
+        <label for="nameInput">タスク名</label>
+        <input type="text" class="form-control" id="nameInput" name="task_name">
+        <input type="date" class="form-control" id="limitInput" name="limit">
+      </div>
+      <button type="submit" class="btn btn-primary">新規追加</button>
+    </form>
+
+    <!-- 追加完了時にフラッシュメッセージ　-->
+    @if(Session::has('message'))
+      <div class="bg-info">
+        <p>{{ Session::get('message') }}</p>
+      </div>
+    @endif
+
+    @if ($errors->has('task_name'))
+      <div class="bg-info">
+        <p class="error">{{ $errors->first('task_name') }}</p>
+      </div>
+    @endif
+
     <ul>
       @forelse ($list->tasks as $task)
-      <li>{{ $task->task_name }}</li>
+      <li>{{ $task->task_name }}
+      <form method="post" action="{{ action('TaskController@state', $list) }}" >
+        {{ csrf_field() }}
+        <button type="submit" class="btn btn-primary" name="done" value="{{ $task->id }}">{{ $task->done == false ? "未完了" : "完了" }}</button>
+      </form>
+      </li>
       @empty
       <li>No Tasks yet</li>
       @endforelse

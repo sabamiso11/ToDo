@@ -14,5 +14,7 @@
 Route::redirect('/create', '/', 301);
 
 Route::get('/', 'TaskListController@index');
-Route::post('create', 'TaskListController@store');
-Route::get('/list/{id}', 'TaskListController@show');
+Route::post('/create', 'TaskListController@store');
+Route::get('/lists/{list}', 'TaskListController@show');
+Route::post('/lists/{list}/task', 'TaskController@store');
+Route::post('/lists/{list}/state/', 'TaskController@state');
