@@ -16,7 +16,7 @@
         <input type="text" class="form-control" id="nameInput" name="task_name">
         <input type="date" class="form-control" id="limitInput" name="limit">
       </div>
-      <button type="submit" class="btn btn-primary" name="list_id" value="{{$list->id}}">新規追加</button>
+      <button type="submit" class="btn btn-primary">新規追加</button>
     </form>
 
     <!-- 追加完了時にフラッシュメッセージ　-->
@@ -29,6 +29,12 @@
     @if ($errors->has('task_name'))
       <div class="bg-info">
         <p class="error">{{ $errors->first('task_name') }}</p>
+      </div>
+    @endif
+
+        @if ($errors->has('limit'))
+      <div class="bg-info">
+        <p class="error">{{ $errors->first('limit') }}</p>
       </div>
     @endif
 

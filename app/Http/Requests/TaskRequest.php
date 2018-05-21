@@ -4,6 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
+use App\Http\Controllers;
+use App\TaskList;
 
 class TaskRequest extends FormRequest
 {
@@ -22,27 +25,13 @@ class TaskRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(TaskList $list)
     {
-/*        Validator::make($data, [
-            'task_name' =>[
-                Rule::unique('tasks')->where(function ($query){
-                    return $query->where('task_list_id', $data['task_list_id']);
-                })
-            ],
-        ]->validate();*/
-
+        \Log::info($list);
        return [
             //'task_name' => 'required|min:1|max:31|unique:tasks,task_name',
-            //'task_name' => 'required|min:1|max:31|unique:tasks,task_name'. $this->id. ',id,task_list_id,'. $this->input('list_id')
-            /*Validator::make($data, [
-                'task_name' =>[
-                    Rule::unique('tasks')->where(function ($query){
-                        return $query->where('task_list_id', $data['task_list_id']);
-                    })
-                ],
-            ]->validate();*/
-            'task_name' => 'required|min:1|max:31|unique:tasks,task_name,'. $this->id. ',id,task_list_id,'. $this->input('list_id') 
+            'task_name' => 'required|min:1|max:31|unique:tasks,task_name,' .intval($this->id). ',id,task_list_id,!'. $this->task_list_id
+            //'task_name' => 'required|min:1|max:31|unique:tasks,task_name,'. $this->id. ',id,task_list_id,'. $this->input('list_id')
         ];
     }
 }

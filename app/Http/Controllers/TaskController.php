@@ -3,16 +3,32 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Requests\TaskRequest;
 use App\TaskList;
 use App\Task;
 
 class TaskController extends Controller
 {
-    public function store(TaskRequest $request, TaskList $list){
+    public function store(Request $request, TaskList $list){
+        $validatedData = $request->validate([
+            'task_name' => [ 
+                'required',
+                'min:1',
+                'max:31',
+                Rule::unique('tasks')->where(function($query) use($list){
+                    return $query->where("task_list_id",$list->id);
+                })
+            ],
+            'limit' => 'required|date',
+            $messages = [
+                'task_name.required' => '必須項目です'
+            ],
+        ]);
         $task = new Task;
         $task->task_name = $request->task_name;
         $task->limit = $request->limit;
+        echo $list;
         $list->tasks()->save($task);
         $list->touch();
   
