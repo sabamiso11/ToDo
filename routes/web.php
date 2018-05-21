@@ -18,3 +18,4 @@ Route::post('/create', 'TaskListController@store');
 Route::get('/lists/{list}', 'TaskListController@show');
 Route::post('/lists/{list}/task', 'TaskController@store');
 Route::post('/lists/{list}/state/', 'TaskController@state');
+Route::get('/search', 'SearchController@index');

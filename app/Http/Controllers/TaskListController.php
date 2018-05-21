@@ -10,8 +10,19 @@ use App\TaskList;
 class TaskListController extends Controller
 {
     public function index(){
-      $lists = TaskList::all();
-      return view('list.index', ['lists' => $lists]);
+      //$lists = TaskList::orderBy('updated_at', 'desc')->toSql();
+      //var_dump($lists);
+      $lists = TaskList::withCount([
+        'tasks',
+        'tasks as done_count' => function ($query) {
+          $query->where('done', true);
+        }
+      ])->orderBy('updated_at', 'desc')->get();
+      $dead_lines = TaskList::with(['tasks' => function($query){
+        $query->where('done', false)->orderBy('limit', 'asc');
+      }])->get();
+
+      return view('list.index', ['lists' => $lists, 'dead_lines' => $dead_lines]);
     }
 
     public function create(){

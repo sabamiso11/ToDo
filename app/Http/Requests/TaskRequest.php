@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class TaskRequest extends FormRequest
 {
@@ -23,8 +24,25 @@ class TaskRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'task_name' => 'required|min:1|max:31|unique:tasks,task_name',
+/*        Validator::make($data, [
+            'task_name' =>[
+                Rule::unique('tasks')->where(function ($query){
+                    return $query->where('task_list_id', $data['task_list_id']);
+                })
+            ],
+        ]->validate();*/
+
+       return [
+            //'task_name' => 'required|min:1|max:31|unique:tasks,task_name',
+            //'task_name' => 'required|min:1|max:31|unique:tasks,task_name'. $this->id. ',id,task_list_id,'. $this->input('list_id')
+            /*Validator::make($data, [
+                'task_name' =>[
+                    Rule::unique('tasks')->where(function ($query){
+                        return $query->where('task_list_id', $data['task_list_id']);
+                    })
+                ],
+            ]->validate();*/
+            'task_name' => 'required|min:1|max:31|unique:tasks,task_name,'. $this->id. ',id,task_list_id,'. $this->input('list_id') 
         ];
     }
 }

@@ -34,8 +34,17 @@
       <div>
         <ul>
           <li><a href="{{ url('/lists', $list) }}">{{ $list->list_name }}</a></li>
+          <li>{{ $list->tasks_count }}個中{{ $list->done_count }}個がチェック済み</li>
+          @foreach($dead_lines as $dead_line)
+            @if($dead_line->id == $list->id)
+              @foreach($dead_line->tasks as $task_limit)
+                @if($loop->first)
+                  <li>{{ $task_limit->limit }}</li>
+                @endif
+              @endforeach
+            @endif
+          @endforeach
         </ul>
-
       </div>
     @endforeach
 

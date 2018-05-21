@@ -14,6 +14,7 @@ class TaskController extends Controller
         $task->task_name = $request->task_name;
         $task->limit = $request->limit;
         $list->tasks()->save($task);
+        $list->touch();
   
         return redirect()
         ->action('TaskListController@show', $list)
