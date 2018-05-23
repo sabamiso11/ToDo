@@ -43,12 +43,14 @@ class TaskController extends Controller
         $task->done = !$task->done;
         $list->tasks()->save($task);
 
-/*        $task->done = !$request;
-        $task->save(); */
-
         return redirect()
         ->action('TaskListController@show', $list);
 
+    }
 
+    public function destroy(TaskList $list){
+        $list->tasks()->where('done', true)->delete();
+        return redirect()
+        ->action('TaskListController@show', $list);
     }
 }

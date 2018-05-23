@@ -1,0 +1,13 @@
+main{
+    width: 40rem;
+    margin: 0 auto;
+}
+
+.card{
+    width: 40rem;
+    margin: 1rem 0;
+}
+
+#listNameInput{
+    width: 25rem;
+}

@@ -39,6 +39,9 @@ class TaskListController extends Controller
 
     public function show(TaskList $list){
       //$list = TaskList::findOrFail($id);
+      //$data = $list->where('id', '=', $list->id)->orderBy('created_at', 'asc')->get();
+      //\Log::info($list);
+      //$list = $list->sort('created_at');
       return view('list.show', ['list' => $list]);
     }
 }

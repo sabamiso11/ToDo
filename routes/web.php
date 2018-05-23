@@ -18,4 +18,6 @@ Route::post('/create', 'TaskListController@store');
 Route::get('/lists/{list}', 'TaskListController@show');
 Route::post('/lists/{list}/task', 'TaskController@store');
 Route::post('/lists/{list}/state/', 'TaskController@state');
+Route::post('/lists/{list}/destroy', 'TaskController@destroy');
 Route::get('/search', 'SearchController@index');
+Route::post('/ajax/search', 'Ajax\SearchController@search');
