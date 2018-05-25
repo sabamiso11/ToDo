@@ -21,3 +21,4 @@ Route::post('/lists/{list}/state/', 'TaskController@state');
 Route::post('/lists/{list}/destroy', 'TaskController@destroy');
 Route::get('/search', 'SearchController@index');
 Route::post('/ajax/search', 'Ajax\SearchController@search');
+Route::post('/{list}/destroy', 'TaskListController@destroy');

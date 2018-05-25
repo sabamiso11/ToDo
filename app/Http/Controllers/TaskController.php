@@ -34,7 +34,7 @@ class TaskController extends Controller
   
         return redirect()
         ->action('TaskListController@show', $list)
-        ->with('message', '新しく追加しました');
+        ->with('message', '新しくToDoを追加しました');
 
     }
 
@@ -51,6 +51,7 @@ class TaskController extends Controller
     public function destroy(TaskList $list){
         $list->tasks()->where('done', true)->delete();
         return redirect()
-        ->action('TaskListController@show', $list);
+        ->action('TaskListController@show', $list)
+        ->with('message', 'ToDoを削除しました');
     }
 }

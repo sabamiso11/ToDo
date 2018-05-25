@@ -27,5 +27,11 @@ class TaskListRequest extends FormRequest
         return [
             'list_name' => 'required|min:1|max:31|unique:task_lists,list_name',
         ];
-    }   
+    }
+
+    public function attributes(){
+        return[
+            'list_name' => 'ToDoリスト名'
+        ];
+    }
 }

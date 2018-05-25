@@ -113,7 +113,7 @@ return [
     */
 
     'attributes' => [
-        'task_name' => 'タスク名',
+        'task_name' => 'ToDo名',
         'limit' => '期限',
     ],
 

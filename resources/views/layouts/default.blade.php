@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <title>@yield('title')</title>
+    <title>ToDo App</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <style>
+      body {
+        width: 50%;
+        margin: 0 auto;
+      }
+      #search{
+        right: 0;
+        bottom: 0;
+      }
+    </style>
+    @yield('style')
   </head>
-  <body class="p-3">
+  <body>
     <header>
-
+      <div class="row my-3 mx-auto">
+        <div class="col" >
+          <a href="{{ URL::to('/') }}"><img class="w-100" src={{ asset('/img/top.JPG') }} alt="ToDoApp"></a>
+        </div>
+        <div class="col position-relative">
+          <a href="/search" id="search" class="position-absolute btn btn-outline-primary btn-lg">検索</a>
+        </div>
+      </div>
     </header>
     <main>
     @yield('content')
