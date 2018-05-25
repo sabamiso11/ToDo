@@ -16,58 +16,70 @@
 
 <!-- 追加完了時にフラッシュメッセージ　-->
 @if(Session::has('message'))
-<div class="alert alert-sccess mt-1" role="alert">
-  {{ Session::get('message') }}
-</div>
+  <div class="alert alert-success mt-1" role="alert">
+    {{ Session::get('message') }}
+  </div>
 @endif
 
 @if ($errors->has('task_name'))
-<div class="alert alert-danger mt-1" role="alert">
-  {{ $errors->first('task_name') }}
-</div>
+  <div class="alert alert-danger mt-1" role="alert">
+    {{ $errors->first('task_name') }}
+  </div>
 @endif
 
 @if ($errors->has('limit'))
-<div class="alert alert-danger mt-1" role="alert">
-  {{ $errors->first('limit') }}
-</div>
+  <div class="alert alert-danger mt-1" role="alert">
+    {{ $errors->first('limit') }}
+  </div>
 @endif
 
 <div class="row mb-2">
-<h3 class="col">ToDo一覧</h3>
+  <h3 class="col">ToDo一覧</h3>
 
-@if(count($list->tasks) > 0)
-<form method="post" action="{{ action('TaskController@destroy', $list) }}" >
-{{ csrf_field() }}
-<button type="submit" class="btn btn-outline-success col" name="destroy" value="{{ $list->id }}">完了済みを一括削除</button>
-</form>
-@endif
+  @if($donecheck > 0)
+    <form method="post" action="{{ action('TaskController@destroy', $list->id) }}" id="form_{{ $list->id }}">
+      {{ csrf_field() }}
+      {{ method_field('delete') }}
+      <a href="#" data-id="{{ $list->id }}" class="btn btn-outline-success col" name="destroy" onclick="deleteTask(this);">完了済みを一括削除</a>
+    </form>
+  @endif
 </div>
 
 @forelse ($list->tasks->sortByDesc('created_at') as $task)
-<div class="card mb-2 w-100">
-  <div class="card-body row">
-    <div class="col-10">
-      <h4 class="card-title">{{ $task->task_name }}</h4>
-      <p class="card-text">期限：{{ $task->limit }}</p>
-      <p class="card-text">作成日:{{ $task->created_at }}</p>
-    </div>
+  <div class="card mb-2 w-100">
+    <div class="card-body row">
+      <div class="col-10">
+        <h4 class="card-title">{{ $task->task_name }}</h4>
+        <p class="card-text">期限：{{ $task->limit }}</p>
+        <p class="card-text">作成日:{{ $task->created_at }}</p>
+      </div>
 
-    <div class="col-2 mx-0 my-auto w-100">
-      <form method="post" action="{{ action('TaskController@state', $list) }}" >
-      {{ csrf_field() }}
-    @if($task->done)
-        
-        <button type="submit" class="btn btn-primary btn-lg" name="done" value="{{ $task->id }}">完了</button>
-    @else
-        <button type="submit" class="btn btn-danger btn-lg" name="done" value="{{ $task->id }}">未完了</button>
-    @endif
-      </form>
+      <div class="col-2 mx-0 my-auto w-100">
+        <form method="post" action="{{ action('TaskController@state', $list) }}" >
+          {{ csrf_field() }}
+          @if($task->done)    
+            <button type="submit" class="btn btn-primary btn-lg" name="done" value="{{ $task->id }}">完了</button>
+          @else
+            <button type="submit" class="btn btn-danger btn-lg" name="done" value="{{ $task->id }}">未完了</button>
+          @endif
+        </form>
+      </div>
     </div>
   </div>
-</div>
 @empty
   <p class="mt-5 text-danger">登録されたToDoはございません</p>
 @endforelse
 
+@endsection
+
+@section('script')
+<script>
+function deleteTask(e) {
+  'use strict';
+ 
+  if (confirm('本当に削除していいですか?')) {
+  document.getElementById('form_' + e.dataset.id).submit();
+  }
+}
+</script>
 @endsection

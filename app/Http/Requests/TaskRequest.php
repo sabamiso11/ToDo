@@ -27,11 +27,8 @@ class TaskRequest extends FormRequest
      */
     public function rules(TaskList $list)
     {
-        \Log::info($list);
        return [
-            //'task_name' => 'required|min:1|max:31|unique:tasks,task_name',
             'task_name' => 'required|min:1|max:31|unique:tasks,task_name,' .intval($this->id). ',id,task_list_id,!'. $this->task_list_id
-            //'task_name' => 'required|min:1|max:31|unique:tasks,task_name,'. $this->id. ',id,task_list_id,'. $this->input('list_id')
         ];
     }
 }

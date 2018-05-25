@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Http\Requests\TaskRequest;
 use App\TaskList;
 use App\Task;
 
@@ -50,6 +49,7 @@ class TaskController extends Controller
 
     public function destroy(TaskList $list){
         $list->tasks()->where('done', true)->delete();
+        
         return redirect()
         ->action('TaskListController@show', $list)
         ->with('message', 'ToDoを削除しました');
