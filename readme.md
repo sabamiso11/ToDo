@@ -25,7 +25,19 @@
 - Node.js 8.11.2
 - npm 5.6.0
 
+## 作成機能
+- ToDoリスト一覧の表示
+- ToDoリストの作成
+- ToDoリストの削除
+- ToDoの表示
+- ToDoの作成
+- ToDoの状態変更
+- ToDoの完了済みの削除
+- ToDoの検索
+
 ## データベース設計
+- DBのテーブル構造は以下となります。
+- ToDoは、ToDoリストのidを外部キーとしてtask_list_idで設定します
 ```ToDoリスト
 +------------+------------------+------+-----+---------+----------------+
 | Field      | Type             | Null | Key | Default | Extra          |
@@ -51,6 +63,8 @@
 +--------------+------------------+------+-----+---------+----------------+
 ```
 
+## リレーション
+- ToDoリストがToDoに対して、1対多のリレーションを設定します。
 ```uml
 @startuml
 
@@ -109,7 +123,7 @@ task_list        ----o{     task
 @enduml
 ```
 
-## MVC設計
+## MVCの構成
 - Model
     - TaskList `->ToDoリスト`
     - Task `->ToDo`
@@ -127,6 +141,173 @@ task_list        ----o{     task
 
 - Request
     - TaskListRequest.php　`->TaskListに関するバリデーションチェック`
+
+## シーケンス図
+-　Top画面の表示、ToDoリストの作成・削除処理、ToDo詳細画面の表示、ToDoの作成・削除処理、ToDoの状態変更処理、ToDoリストとToDoの検索処理をまとめたシーケンス図になります。
+```uml
+@startuml{plantuml_seq_sample.png}
+title ToDoAppシーケンス図
+hide footbox
+
+actor ユーザー as user
+participant TaskController as taskcontrol <<Control>>
+participant TaskListController as listcontrol <<Control>>
+participant SearchController as searchcontrol <<Control>>
+participant AjaxSearchController as ajaxcontrol <<Control>>
+participant "<u>Task</u>" as taskmodel <<Model>>
+participant "<u>TaskList</u>" as listmodel <<Model>>
+participant Top画面 as topview <<View>> #98FB98
+participant ToDo詳細画面 as showview <<View>> #98FB98
+participant 検索画面 as searchview <<View>> #98FB98
+
+user -> topview : Top画面表示
+activate topview
+
+topview -> listcontrol :ToDoリストの取得のリクエスト
+activate listcontrol
+listcontrol -> listmodel : << new >>
+activate listmodel
+listcontrol -> listmodel : ToDoリストデータ取得
+listmodel --> listcontrol: ToDoリスト取得結果
+deactivate listmodel
+destroy listmodel
+
+listcontrol -> topview : ToDoリスト取得結果
+deactivate listcontrol
+topview --> user
+deactivate topview
+
+user -> topview : ToDoリストを作成
+activate topview
+topview -> listcontrol :ToDoリストを作成
+activate listcontrol
+listcontrol -> listmodel : << new >>
+activate listmodel
+listcontrol -> listmodel : ToDoリストを作成
+listmodel --> listcontrol: ToDoリストの作成処理結果
+deactivate listmodel
+destroy listmodel
+listcontrol -> topview : ToDoリストの作成処理結果
+deactivate listcontrol
+topview --> user　: ToDoリストの作成処理結果
+deactivate topview
+
+user -> topview : ToDoリストを削除
+activate topview
+topview -> listcontrol :ToDoリストを削除
+activate listcontrol
+listcontrol -> listmodel : << new >>
+activate listmodel
+listcontrol -> listmodel : ToDoリストIDに一致するToDoリストを削除
+listmodel --> listcontrol: ToDoリストの削除処理結果
+deactivate listmodel
+destroy listmodel
+listcontrol -> topview : ToDoリストの削除処理結果
+deactivate listcontrol
+topview --> user
+deactivate topview
+
+user -> showview : ToDo詳細画面表示
+activate showview
+showview -> taskcontrol :ToDoリストの取得のリクエスト(ToDoリストID)
+activate taskcontrol
+taskcontrol -> listmodel : << new >>
+activate listmodel
+taskcontrol -> listmodel : ToDoリストIDに一致したToDoの取得
+listmodel -> taskmodel : ToDoの取得
+activate taskmodel
+taskmodel --> listmodel : ToDoの取得結果
+deactivate taskmodel
+listmodel --> taskcontrol: ToDo取得結果
+deactivate listmodel
+destroy listmodel
+taskcontrol -> showview : ToDo取得結果
+deactivate taskcontrol
+
+showview --> user :　ToDo詳細画面表示
+deactivate showview
+user -> showview : ToDoの完了
+activate showview
+showview -> taskcontrol :ToDo完了
+activate taskcontrol
+taskcontrol -> listmodel : << new >>
+activate listmodel
+taskcontrol -> listmodel : ToDoリストIDに一致したToDoの完了処理
+listmodel -> taskmodel : ToDoの完了処理
+activate taskmodel
+taskmodel --> listmodel : ToDoの完了処理結果
+deactivate taskmodel
+listmodel --> taskcontrol: ToDoの完了処理結果
+deactivate listmodel
+destroy listmodel
+taskcontrol -> showview : ToDoの完了処理後を表示
+deactivate taskcontrol
+showview --> user :　ToDoの完了処理後を表示
+deactivate showview
+
+user -> showview : ToDoの作成
+activate showview
+showview -> taskcontrol :ToDoの作成
+activate taskcontrol
+taskcontrol -> listmodel : << new >>
+activate listmodel
+taskcontrol -> listmodel : ToDoリストIDに一致したToDoの作成
+listmodel -> taskmodel : ToDoの作成処理
+activate taskmodel
+taskmodel --> listmodel : ToDoの作成処理結果
+deactivate taskmodel
+listmodel --> taskcontrol: ToDoの作成処理結果
+deactivate listmodel
+destroy listmodel
+
+taskcontrol -> showview : ToDoの作成処理結果
+deactivate taskcontrol
+showview --> user :　ToDoの作成処理結果を表示
+deactivate showview
+user -> showview : 完了済みToDoの削除
+activate showview
+showview -> taskcontrol :完了済みToDoの削除
+activate taskcontrol
+taskcontrol -> listmodel : << new >>
+activate listmodel
+taskcontrol -> listmodel : ToDoリストIDに一致したToDoの完了済みを削除処理
+listmodel -> taskmodel : ToDoの完了済み削除処理結果
+activate taskmodel
+taskmodel --> listmodel : ToDoの完了済み削除処理結果
+deactivate taskmodel
+listmodel --> taskcontrol: ToDoの完了済み削除処理結果
+deactivate listmodel
+destroy listmodel
+taskcontrol -> showview : ToDoの完了済み削除処理結果
+deactivate taskcontrol
+showview --> user :　ToDoの完了済み削除処理結果を表示
+deactivate showview
+
+user -> searchview : 検索リクエスト
+activate searchview
+searchview -> ajaxcontrol :検索
+activate ajaxcontrol
+ajaxcontrol -> listmodel : << new >>
+ajaxcontrol -> listmodel : ToDoリスト検索
+activate listmodel
+listmodel -> taskmodel : ToDoの検索
+activate taskmodel
+taskmodel --> listmodel : ToDoの検索結果
+deactivate taskmodel
+ajaxcontrol <-- listmodel : 検索結果
+deactivate listmodel
+destroy listmodel
+ajaxcontrol -> searchcontrol : 検索結果
+deactivate ajaxcontrol
+activate searchcontrol
+searchcontrol -->searchview: 検索結果
+deactivate searchcontrol
+searchview --> user
+deactivate searchview
+
+
+@enduml
+```
 
 
 # 開発環境のセットアップ手順
