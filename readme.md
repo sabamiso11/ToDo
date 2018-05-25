@@ -189,7 +189,7 @@ deactivate listmodel
 destroy listmodel
 listcontrol -> topview : ToDoリストの作成処理結果
 deactivate listcontrol
-topview --> user　: ToDoリストの作成処理結果
+topview --> user
 deactivate topview
 
 user -> topview : ToDoリストを削除
